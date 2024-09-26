@@ -22,5 +22,10 @@ def perform_rollback_cmd(cmd, tag, target_changelog, container, session, context
 session = OverthereHostSession(container.host, stream_command_output=True, execution_context=context)
 with session:
     target_changelog_root_file = get_changelog_root(session, deployed)
-    perform_rollback_cmd('rollbackSQL', tag, target_changelog_root_file, container, session, context)
+
+    try:
+        perform_rollback_cmd('rollbackSQL', tag, target_changelog_root_file, container, session, context)
+    except Exception as e :
+        print (f"Error generating preview SQL: {e}")
+
     perform_rollback_cmd('rollback', tag, target_changelog_root_file, container, session, context)
